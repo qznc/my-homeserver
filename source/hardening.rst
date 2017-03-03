@@ -123,3 +123,26 @@ I need to edit '/etc/host.conf', but why?
 .. seealso::
 
    `Ubuntu Server Guide <https://help.ubuntu.com/lts/serverguide/>`_
+
+EtcKeeper
+---------
+
+Keeping ``/etc`` in version control can be convenient.
+It is presented in this hardening chapter,
+because looking at history can be interesting in terms of security.
+
+Install and initialize it.
+It will autocommit daily and in sync with apt.
+
+.. code::
+
+   sudo apt install etckeeper
+   cd /etc
+   sudo etckeeper init
+   sudo etckeeper commit "initial"
+
+AIDE
+----
+
+The `Advanced Intrusion Detection Environment <aide.sourceforge.net>`_ tool
+looks at the system and sends a mail, when anything suspicious changes.

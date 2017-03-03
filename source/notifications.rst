@@ -23,7 +23,7 @@ Usually, I recommend `Signal <https://whispersystems.org/>`_,
 but they do not like bots.
 Likewise, WhatsApp, which is really popular.
 
-Threema? Wire? Matrix?
+Threema? Wire? Matrix? Jabber?
 
 Supervising
 -----------
