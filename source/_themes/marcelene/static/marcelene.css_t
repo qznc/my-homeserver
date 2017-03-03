@@ -25,6 +25,7 @@ span.pre,
 code,
 pre {
   font-family: {{ theme_codefont }};
+  font-size: 95%; // adapt x-height for inline text
 }
 
 /* Page layout */
@@ -449,6 +450,8 @@ div.seealso {
   background-color: #eee;
 }
 .seealso .admonition-title { color: #aaa; }
+
+div.code { overflow: auto; }
 
 div.highlight-txt,
 div.document div.highlight {

@@ -23,4 +23,9 @@ Usually, I recommend `Signal <https://whispersystems.org/>`_,
 but they do not like bots.
 Likewise, WhatsApp, which is really popular.
 
-Threema? Wire?
+Threema? Wire? Matrix?
+
+Supervising
+-----------
+
+Nagios and Munin?
