@@ -107,3 +107,37 @@ If you did not select it during installation, do it now.
 .. code:: sh
 
    apt install openssh-server
+
+Trimming
+--------
+
+Ubuntu is actually too generous in my opinion.
+This is why I remove a few packages.
+
+.. code:: sh
+
+   apt remove byobu info tcpdump telnet tasksel screen laptop-detect ftp fuse install-info plymouth xauth
+
+This also removes packages like ``ubuntu-server``,
+which is ok,
+because these are empty and only used to pull in other packages.
+
+Headless Server
+---------------
+
+For a more realistic feeling,
+we can disable qemu's virtual display.
+Instead, we ssh into the guest system.
+Boot it with ``-nographic`` and some port forwarding:
+
+.. code:: sh
+
+   qemu-system-x86_64 -hda playground.img -enable-kvm -m 1G -nographic -net user,hostfwd=tcp::7777-:22 -net nic
+
+Now on the host,
+use ssh to port 7777.
+
+.. code:: sh
+
+   ssh localhost -p 7777
+
