@@ -5,13 +5,10 @@ I plan to build and maintain a cheap home server.
 Here I document my design choices,
 configuration, and maybe even teach a few Linux things.
 
-For version 0.x,
-I will only use a VM.
-When I actually buy hardware and use it,
-that will be version 1.0.
-If I buy new hardware,
-it will be version 2.0.
-And so forth.
+For version 0.1,
+I only used a VM.
+Then I switched to an old laptop.
+It is a weak dual core Intel Atom N570 with 1GB RAM and 300GB disk.
 
 .. toctree::
    :maxdepth: 2

@@ -144,5 +144,22 @@ It will autocommit daily and in sync with apt.
 AIDE
 ----
 
-The `Advanced Intrusion Detection Environment <aide.sourceforge.net>`_ tool
+The `Advanced Intrusion Detection Environment <http://aide.sourceforge.net>`_ tool
 looks at the system and sends a mail, when anything suspicious changes.
+
+.. code::
+
+   sudo apt install aide
+   sudo aideinit -y -f
+
+AIDE scans the whole system,
+so it takes a while.
+
+.. warning::
+
+   Not yet working.
+   My laptop might be too slow?
+
+.. seealso::
+
+   `Ubuntu documentation on stricter defaults <https://help.ubuntu.com/community/StricterDefaults>`_

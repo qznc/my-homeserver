@@ -13,6 +13,26 @@ E-Mail
 ------
 
 The usual way is to send emails.
+To avoid a full mail server, there is a simple forward tool.
+
+.. highlight:: sh
+
+   apt install ssmtp
+
+Now, we must configure it by editing ``/etc/ssmtp/ssmtp.conf``.
+
+.. code::
+
+   root=something+homeserver@gmail.com
+   mailhub=smtp.gmail.com:587
+   rewriteDomain=gmail.com
+   FromLineOverride=NO
+
+   AuthUser=qznc
+   AuthPass=blablabla
+   UseTLS=Yes
+   UseSTARTTLS=Yes
+
 
 Instant Message
 ---------------
