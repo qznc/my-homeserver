@@ -141,3 +141,12 @@ use ssh to port 7777.
 
    ssh localhost -p 7777
 
+Snap
+----
+
+For installing software,
+I like the Ubuntu Snap system.
+
+.. code:: sh
+
+   sudo apt install snapd

@@ -17,8 +17,9 @@ It is a weak dual core Intel Atom N570 with 1GB RAM and 300GB disk.
    os
    hardening
    notifications
+   dyndns
    webserver
-   owncloud
+   nextcloud
    sandstorm
    convenience
    fineprint
