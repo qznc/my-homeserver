@@ -56,6 +56,10 @@ Check, if it is enabled.
 
    sudo apparmor_status
 
+If you want to `write your own AppArmor profiles <https://www.howtogeek.com/118328/how-to-create-apparmor-profiles-to-lock-down-programs-on-ubuntu/>`_,
+the trick is to use ``aa-genprof``.
+It semi-automatically generates a profile from logging activity.
+
 Firewall
 --------
 
