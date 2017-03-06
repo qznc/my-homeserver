@@ -27,14 +27,42 @@ I use anacron, because it is simpler to dump scripts into ``/etc/cron.hourly``.
 
 .. code:: sh
 
-   sudo apt install anacron
+   sudo apt install anacron cronic
 
-Now put a script into ``/etc/cron.hourly/example``.
+Only Mail on Failure
+--------------------
+
+Since I enabled email notifications,
+cron spams a lot.
+We only want mail,
+if something goes wrong.
+Cron violates the `rule of silence <https://en.wikipedia.org/wiki/Unix_philosophy>`_.
+
+The solution:
+Cron sends mail, if there was output from stdout or stderr,
+so we must silence the script.
+The `cronic <http://habilis.net/cronic/>`_ wrapper is available via apt,
+but it has a wrong idea about "fail".
+
+  Cronic is a small shim shell script for wrapping cron jobs
+  so that cron only sends email when an error has occurred.
+  Cronic defines an error as any non-trace error output or a non-zero result code.
+
+While "stderr" sounds like it is for errors,
+it is actually for meta output in general.
+Fortunately, we can easily redirect stderr to stdout,
+then cronic can only rely on the result code,
+which is correct.
+
+Example
+-------
+
+Put the following script into ``/etc/cron.hourly/example``.
 
 .. code:: sh
 
    #!/bin/sh
-   su - cronbot -- /home/cronbot/example.sh
+   su - cronbot -- cronic /home/cronbot/example.sh 2>&1
 
 To check log files,
 when your script has run.
