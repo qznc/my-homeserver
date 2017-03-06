@@ -10,7 +10,7 @@ First, install a bunch of helpful utilities.
 
 .. code:: sh
 
-   sudo apt install iotop htop
+   sudo apt install iotop htop sysstat net-tools
 
 First minutes
 -------------
@@ -32,6 +32,8 @@ still take a look.
    dmesg
    # check the RAM use
    free -m
+   # check uptime and load
+   uptime
    # check active processes
    htop
    # check disk IO
