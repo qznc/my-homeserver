@@ -46,6 +46,10 @@ Additionally, ``/etc/apt/apt.conf.d/10periodic``:
 AppArmor
 --------
 
+.. code:: sh
+
+   sudo apt install apparmor-utils
+
 Check, if it is enabled.
 
 .. code:: sh

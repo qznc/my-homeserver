@@ -22,3 +22,8 @@ so you can access the config remotely.
 When setting the password,
 I also enabled HTTPS,
 so my password is transfered safely.
+
+.. warning::
+
+   SyncThing does not come with an AppArmor profile.
+   Maybe I should create one.
