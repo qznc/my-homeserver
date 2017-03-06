@@ -67,6 +67,10 @@ Firewall
 
    apt install ufw
 
+.. warning::
+
+   Not active in practice yet
+
 SSH Configuration
 -----------------
 
@@ -113,8 +117,9 @@ Checking for Root Kits
 
    sudo apt install rkhunter chkrootkit
 
-Disk Encryption
----------------
+.. warning::
+
+   Not active in practice yet
 
 Secure Shared Memory
 --------------------
@@ -135,9 +140,10 @@ I need to edit '/etc/host.conf', but why?
    order bind,hosts
    nospoof on
 
-.. seealso::
+.. warning::
 
-   `Ubuntu Server Guide <https://help.ubuntu.com/lts/serverguide/>`_
+   I do not understand this yet.
+   Why and how does it work?
 
 EtcKeeper
 ---------
@@ -178,6 +184,7 @@ so it takes a while.
 .. seealso::
 
    `Ubuntu documentation on stricter defaults <https://help.ubuntu.com/community/StricterDefaults>`_,
-   `My First 5 Minutes On A Server; Or, Essential Security for Linux Servers <https://plusbryan.com/my-first-5-minutes-on-a-server-or-essential-security-for-linux-servers>`_
+   `My First 5 Minutes On A Server; Or, Essential Security for Linux Servers <https://plusbryan.com/my-first-5-minutes-on-a-server-or-essential-security-for-linux-servers>`_,
+   `Ubuntu Server Guide <https://help.ubuntu.com/lts/serverguide/>`_
 
 
