@@ -45,7 +45,7 @@ to set senders correctly.
 .. code::
 
    # FROM:root -> FROM:qznc@web.de
-   root:qznc@web.de:smtp.web.de
+   root:qznc@web.de
 
 Now cron and other should be able to send email.
 You can try it manually.
