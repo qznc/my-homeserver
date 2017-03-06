@@ -17,22 +17,46 @@ To avoid a full mail server, there is a simple forward tool.
 
 .. highlight:: sh
 
-   apt install ssmtp
+   apt install ssmtp mailutils
 
 Now, we must configure it by editing ``/etc/ssmtp/ssmtp.conf``.
 
 .. code::
 
+   # Where to forward mail to root and other sys accounts
    root=something+homeserver@gmail.com
-   mailhub=smtp.gmail.com:587
-   rewriteDomain=gmail.com
-   FromLineOverride=NO
 
-   AuthUser=qznc
-   AuthPass=blablabla
+   # Use web.de for sending
+   mailhub=smtp.web.de:587
    UseTLS=Yes
    UseSTARTTLS=Yes
 
+   # Login for web.de
+   AuthUser=qznc
+   AuthPass=blablabla
+
+   # Freemailer usually allow only specific FROM fields
+   rewriteDomain=web.de
+   FromLineOverride=YES
+
+Then also ``/etc/ssmtp/revaliases``,
+to set senders correctly.
+
+.. code::
+
+   # FROM:root -> FROM:qznc@web.de
+   root:qznc@web.de:smtp.web.de
+
+Now cron and other should be able to send email.
+You can try it manually.
+
+.. code:: sh
+
+   echo "$HOSTNAME Email Ready" | mail -s 'Email test' root
+
+.. warning::
+
+   The ``+homeserver`` tagging in gmail seems not to work?
 
 Instant Message
 ---------------
