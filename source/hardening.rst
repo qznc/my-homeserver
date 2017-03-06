@@ -83,7 +83,7 @@ Now we can edit ``/etc/ssh/sshd_config``:
    AuthorizedKeysFile     %h/.ssh/authorized_keys
    Protocol 2
    PermitRootLogin no
-   DebianBanner no
+   AllowUsers qznc
 
 Also,
 rate limiting via firewall.
@@ -94,6 +94,13 @@ rate limiting via firewall.
 
 Fail2ban
 --------
+
+Just install it.
+Out of the box, it is configured ok.
+
+.. code:: sh
+
+   sudo apt install fail2ban
 
 Checking for Root Kits
 ----------------------
@@ -166,4 +173,7 @@ so it takes a while.
 
 .. seealso::
 
-   `Ubuntu documentation on stricter defaults <https://help.ubuntu.com/community/StricterDefaults>`_
+   `Ubuntu documentation on stricter defaults <https://help.ubuntu.com/community/StricterDefaults>`_,
+   `My First 5 Minutes On A Server; Or, Essential Security for Linux Servers <https://plusbryan.com/my-first-5-minutes-on-a-server-or-essential-security-for-linux-servers>`_
+
+
