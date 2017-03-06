@@ -27,3 +27,9 @@ Out of the box,
 NextCloud comes as a Dropbox clone.
 Activating features like addressbook and calendar
 requires more configuration as admin.
+
+.. warning::
+
+   Disabled NextCloud.
+   Must use IP internally and DynDNS externally,
+   because my router cannot fix the intern DNS.
