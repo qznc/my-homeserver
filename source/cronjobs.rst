@@ -73,3 +73,29 @@ use journalctl.
 .. code:: sh
 
    sudo journalctl -u cron
+
+Longterm
+--------
+
+I do not like cron and I want to replace it.
+For now it works.
+On issue is efficiency.
+For the example above, there is
+
+* at the top ``cron``, which
+* executes ``anacron``, which
+* executes ``/etc/cron.hourly/example``, which
+* executes ``cronic``, which
+* executes ``/home/cronbot/example.sh``.
+
+In this stack, anacron and cronic are crutches for cron shortcomings.
+
+One alternative could be systemd,
+which includes `timers <https://wiki.archlinux.org/index.php/Systemd/Timers>`_.
+They can be misused as a cron replacement,
+but it is obviously a workaround,
+especially if you want to get mail on failure.
+
+Maybe `jobber <https://dshearer.github.io/jobber/>`_ could be worthwhile.
+While I dislike the YAML syntax,
+it seems to be fine in its general design.
