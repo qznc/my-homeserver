@@ -18,6 +18,7 @@ As user cronbot create ``~/example.sh``.
 .. code:: sh
   cat >~/example.sh <<EOF
   #!/bin/sh
+  set -e
   exec 2>&1
   echo "Success!"
   EOF
