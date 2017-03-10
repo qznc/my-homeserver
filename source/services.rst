@@ -23,7 +23,40 @@ When setting the password,
 I also enabled HTTPS,
 so my password is transfered safely.
 
+AppArmor Profile
+~~~~~~~~~~~~~~~~
+
+Using ``aa-genprof``, I made a AppArmor profile,
+which lives in ``/etc/apparmor.d/usr.bin.syncthing``:
+
+.. code::
+
+    #include <tunables/global>
+
+    /usr/bin/syncthing flags=(complain) {
+      #include <abstractions/base>
+
+      network inet dgram,
+      network inet stream,
+      network inet6 dgram,
+      network inet6 stream,
+      network netlink raw,
+
+      /etc/hosts r,
+      /etc/nsswitch.conf r,
+      /etc/ssl/certs/ca-certificates.crt r,
+      /home/*/.config/syncthing/ rw,
+      /home/*/.config/syncthing/** rw,
+      /home/*/Sync/ rw,
+      /home/*/Sync/** rw,
+      /proc/sys/net/core/somaxconn r,
+      /run/resolvconf/resolv.conf r,
+      /usr/bin/syncthing mr,
+    }
+
 .. warning::
 
-   SyncThing does not come with an AppArmor profile.
-   Maybe I should create one.
+    Still in complain mode,
+    which means it will log stuff,
+    but not prevent anything.
+    I need to review this after a while.
