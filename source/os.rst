@@ -7,6 +7,9 @@ which means it is relatively easy to get help online.
 It also gives 5 years of security updates for LTS versions,
 which is important if we want to let the server run unattended for years.
 
+Docker Playground
+-----------------
+
 Assuming you have docker installed,
 a sandbox for playing around is simple.
 
@@ -67,6 +70,54 @@ Here qemu will not modify the ``playground.img``.
 
    qemu-system-x86_64 -hda playground.img -enable-kvm -m 1G -snapshot
 
+Headless Server
+~~~~~~~~~~~~~~~
+
+For a more realistic feeling,
+we can disable qemu's virtual display.
+Instead, we ssh into the guest system.
+Boot it with ``-nographic`` and some port forwarding:
+
+.. code:: sh
+
+   qemu-system-x86_64 -hda playground.img -enable-kvm -m 1G -nographic -net user,hostfwd=tcp::7777-:22 -net nic
+
+Now on the host,
+use ssh to port 7777.
+
+.. code:: sh
+
+   ssh localhost -p 7777
+
+Converting a Desktop Ubuntu
+---------------------------
+
+With my laptop-to-homeserver conversion,
+there is a full desktop system running.
+It might be nice,
+to access the server directly with a GUI,
+but a few things are removed nonetheless.
+
+.. code:: sh
+
+   sudo apt remove google-chrome gnucash #...
+
+NetworkManager provides a DNS resolver on port 53.
+To disable this,
+edit ``/etc/NetworkManager/NetworkManager.conf``
+and comment out the ``dns=dnsmasq`` line.
+Then restart NetworkManager.
+Afterwards the port is free and
+we could setup our own DNS server.
+
+.. code:: sh
+
+   sudo systemctl restart NetworkManager
+
+.. warning::
+
+   Should I remove lightdm, Unity, etc completely?
+
 Networking
 ----------
 
@@ -122,25 +173,6 @@ This also removes packages like ``ubuntu-server``,
 which is ok,
 because these are empty and only used to pull in other packages.
 
-Headless Server
----------------
-
-For a more realistic feeling,
-we can disable qemu's virtual display.
-Instead, we ssh into the guest system.
-Boot it with ``-nographic`` and some port forwarding:
-
-.. code:: sh
-
-   qemu-system-x86_64 -hda playground.img -enable-kvm -m 1G -nographic -net user,hostfwd=tcp::7777-:22 -net nic
-
-Now on the host,
-use ssh to port 7777.
-
-.. code:: sh
-
-   ssh localhost -p 7777
-
 Snap
 ----
 
@@ -151,31 +183,3 @@ I like the Ubuntu Snap system.
 
    sudo apt install snapd
 
-Converting a Desktop Ubuntu
----------------------------
-
-With my laptop-to-homeserver conversion,
-there is a full desktop system running.
-It might be nice,
-to access the server directly with a GUI,
-but a few things are removed nonetheless.
-
-.. code:: sh
-
-   sudo apt remove google-chrome gnucash #...
-
-NetworkManager provides a DNS resolver on port 53.
-To disable this,
-edit ``/etc/NetworkManager/NetworkManager.conf``
-and comment out the ``dns=dnsmasq`` line.
-Then restart NetworkManager.
-Afterwards the port is free and
-we could setup our own DNS server.
-
-.. code:: sh
-
-   sudo systemctl restart NetworkManager
-
-.. warning::
-
-   Should I remove lightdm, Unity, etc completely?
