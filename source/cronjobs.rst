@@ -16,6 +16,7 @@ so I will just use a dummy script here.
 As user cronbot create ``~/example.sh``.
 
 .. code:: sh
+
   cat >~/example.sh <<EOF
   #!/bin/sh
   set -e

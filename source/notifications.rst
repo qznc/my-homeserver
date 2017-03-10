@@ -15,7 +15,7 @@ E-Mail
 The usual way is to send emails.
 To avoid a full mail server, there is a simple forward tool.
 
-.. highlight:: sh
+.. code:: sh
 
    apt install ssmtp mailutils
 
