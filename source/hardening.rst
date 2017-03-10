@@ -65,7 +65,7 @@ Firewall
 
 .. code:: sh
 
-   apt install ufw
+   sudo apt install ufw
 
 .. warning::
 
