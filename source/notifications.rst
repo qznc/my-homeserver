@@ -49,10 +49,12 @@ to set senders correctly.
 
 Now cron and other should be able to send email.
 You can try it manually.
+Explicitly try a different FROM address via ``-r``
+to check if ssmtp correctly rewrites it.
 
 .. code:: sh
 
-   echo "$HOSTNAME Email Ready" | mail -s 'Email test' root
+   echo "$HOSTNAME Email Ready" | mail -s 'Email test' -r 'bill@microsft.com' root
 
 .. warning::
 
