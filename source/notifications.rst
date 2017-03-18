@@ -60,6 +60,14 @@ You can try it manually.
 
 .. warning::
 
+   SSMTP seems to require a desktop Ubuntu.
+   After I reinstalled from scratch with Ubuntu server,
+   it does not work anymore.
+   See `bug report 999252 <https://bugs.launchpad.net/ubuntu/+source/ssmtp/+bug/999252>`_
+   and `998480 <https://bugs.launchpad.net/ubuntu/+source/ssmtp/+bug/998480>`_.
+
+.. warning::
+
    The ``+homeserver`` tagging in gmail seems not to work?
 
 Instant Message
