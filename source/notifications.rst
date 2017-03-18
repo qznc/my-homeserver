@@ -47,6 +47,10 @@ to set senders correctly.
    # FROM:root -> FROM:qznc@web.de
    root:qznc@web.de
 
+Also, your hostname must be valid for the E-Mail provider.
+This might require to write it into
+`/etc/mailname` and `/etc/hostname`.
+
 Now cron and other should be able to send email.
 You can try it manually.
 
