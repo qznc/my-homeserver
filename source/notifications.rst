@@ -17,54 +17,87 @@ To avoid a full mail server, there is a simple forward tool.
 
 .. highlight:: sh
 
-   apt install ssmtp mailutils
+   apt install postfix mailutils
+
+During the installation of postfix,
+dpkg will ask a few questions.
+My answwers were:
+
+* Install a satellite system
+* For mailname my `dynamic selfhost domain <dyndns>`_
+* As SMTP relay host, my mail provider ``smtp.web.de``
+
+Now more questions via ``sudo dpkg-reconfigure postfix``.
 
 Now, we must configure it by editing ``/etc/ssmtp/ssmtp.conf``.
 
-.. code::
+* After repeating the first three questions above, there is more.
+* My email address, which will receive mail for root etc.
+* Destinations to accept mail.
+  Removed a few of the proposed ones.
+* Force synchronous updates.
+* As per default,
+  only accept from localhost.
+* Use the upstream default of 51200000 bytes.
+* Default for local address extension character.
+* Use IPv4 and IPv6.
 
-   # Where to forward mail to root and other sys accounts
-   root=something+homeserver@gmail.com
-
-   # Use web.de for sending
-   mailhub=smtp.web.de:587
-   UseTLS=Yes
-   UseSTARTTLS=Yes
-
-   # Login for web.de
-   AuthUser=qznc
-   AuthPass=blablabla
-
-   # Freemailer usually allow only specific FROM fields
-   rewriteDomain=web.de
-   FromLineOverride=YES
-
-Then also ``/etc/ssmtp/revaliases``,
-to set senders correctly.
+This is still not enough configuration.
+Add the following lines to ``/etc/postfix/main.cf``.
 
 .. code::
 
-   # FROM:root -> FROM:qznc@web.de
-   root:qznc@web.de
+    smtp_sasl_auth_enable = yes
+    smtp_sasl_security_options = noanonymous
+    smtp_sasl_password_maps = hash:/etc/postfix/sasl_password
+    sender_canonical_maps = hash:/etc/postfix/sender_canonical
+    smtp_tls_security_level = encrypt
+    smtpd_enforce_tls = yes
 
-Also, your hostname must be valid for the E-Mail provider.
-This might require to write it into
-`/etc/mailname` and `/etc/hostname`.
+The account information for sending emails
+is put into ``/etc/postfix/sasl_password``
+in the following format.
+Also, set its mode to ``0600``,
+so it is not readable by everybody on the machine.
 
-Now cron and other should be able to send email.
+.. code::
+
+    smtp.web.de qznc@web.de:password
+
+In ``/etc/postfix/sender_canonical``,
+write a list of all mappings for local users.
+
+.. code::
+
+    root someone+root@gmail.com
+    qznc someone+qznc@gmail.com
+
+These are for adapting the sender addresses.
+Now for changing the recipient addresses,
+edit ``/etc/aliases``.
+
+.. code::
+
+    postmaster:    root
+    root:          someone+root@gmail.com
+    qznc:          someone+qznc@gmail.com
+
+
+Postfix requires some hashing and a restart now.
+
+.. code:: sh
+
+    sudo postmap /etc/postfix/sasl_password
+    sudo postmap /etc/postfix/sender_canonical
+    sudo newaliases
+    sudo systemctl restart postfix
+
+Now cron and others should be able to send email.
 You can try it manually.
 
 .. code:: sh
 
-   echo "$HOSTNAME Email Ready" | mail -s 'Email test' root
-
-.. warning::
-
-   SSMTP seems to require a desktop Ubuntu.
-   After I reinstalled from scratch with Ubuntu server,
-   it does not work anymore.
-   See `bug report 999252 <https://bugs.launchpad.net/ubuntu/+source/ssmtp/+bug/999252>`_
-   and `998480 <https://bugs.launchpad.net/ubuntu/+source/ssmtp/+bug/998480>`_.
+   echo "$HOSTNAME Email Ready" | mail -s 'Email test' -r 'bill@microsft.com' root
 
 .. warning::
 
@@ -79,7 +112,9 @@ Usually, I recommend `Signal <https://whispersystems.org/>`_,
 but they do not like bots.
 Likewise, WhatsApp, which is really popular.
 
-Threema? Wire? Matrix? Jabber?
+.. warning::
+
+    Matrix looks good. Working on using that...
 
 Supervising
 -----------
