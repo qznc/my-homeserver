@@ -23,6 +23,16 @@ When setting the password,
 I also enabled HTTPS,
 so my password is transfered safely.
 
+I do not plan to edit the files on my server.
+It is just a background store.
+This means it is not necessary to scan the directories every minute
+(the default scan interval).
+Especially for larger directories,
+this means permanent useless activity.
+You can change the "Rescan Interval" for each SyncThing folder in its settings.
+I set them to 36000,
+which is 10 hours.
+
 AppArmor Profile
 ~~~~~~~~~~~~~~~~
 
