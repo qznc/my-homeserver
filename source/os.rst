@@ -173,6 +173,29 @@ This also removes packages like ``ubuntu-server``,
 which is ok,
 because these are empty and only used to pull in other packages.
 
+Logging
+-------
+
+.. code:: sh
+
+   apt remove rsyslog
+
+Removing rsyslog implicitly remove ``ubuntu-minimal``,
+which is ok.
+On 16.04 rsyslog duplicates the functionality of systemd journals.
+It is useful for remote logging,
+but I do not use that.
+
+By default,
+the systemd logs are not stored across reboots.
+To enable that,
+edit ``/etc/systemd/journald.conf`` to include:
+
+.. code::
+
+   [Journal]
+   Storage=persistent
+
 Snap
 ----
 
