@@ -206,3 +206,46 @@ I like the Ubuntu Snap system.
 
    sudo apt install snapd
 
+Converting a Desktop Ubuntu
+---------------------------
+
+With my laptop-to-homeserver conversion,
+there is a full desktop system running.
+It might be nice,
+to access the server directly with a GUI,
+but a few things are removed nonetheless.
+
+.. code:: sh
+
+   sudo apt remove google-chrome gnucash #...
+
+NetworkManager provides a DNS resolver on port 53.
+To disable this,
+edit ``/etc/NetworkManager/NetworkManager.conf``
+and comment out the ``dns=dnsmasq`` line.
+Then restart NetworkManager.
+Afterwards the port is free and
+we could setup our own DNS server.
+
+.. code:: sh
+
+   sudo systemctl restart NetworkManager
+
+.. warning::
+
+   Should I remove lightdm, Unity, etc completely?
+
+Ubuntu Server
+-------------
+
+The desktop Ubuntu was 32bit,
+although it is a 64bit processor.
+When I tried to convert the system,
+I broke apt.
+Then I installed Ubuntu from scratch.
+
+Another mistake was to enabled home directory encryption.
+That is not a good idea,
+if you want to login with an ssh public key.
+The ssh server cannot access the ``authorized_keys`` file,
+if it is encrypted.
