@@ -81,7 +81,7 @@ use:
 
 .. code:: sh
 
-   ssh-copy-id benutername@remotehost
+   ssh-copy-id username@remotehost
 
 Now we can edit ``/etc/ssh/sshd_config``:
 
