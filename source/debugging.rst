@@ -10,7 +10,7 @@ First, install a bunch of helpful utilities.
 
 .. code:: sh
 
-   sudo apt install iotop htop sysstat net-tools
+   sudo apt install iotop htop sysstat
 
 First minutes
 -------------
@@ -39,6 +39,6 @@ still take a look.
    # check disk IO
    iotop
    # check network connections
-   netstat -pant
+   ss -pant
    # check disk use
    df -h
