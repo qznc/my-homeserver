@@ -105,6 +105,24 @@ to check if ssmtp correctly rewrites it.
 
    The ``+homeserver`` tagging in gmail seems not to work?
 
+Now a nice trick to improve the emails a little
+`from Chris Siebenmann <https://utcc.utoronto.ca/~cks/space/blog/sysadmin/IdentifyMachineEmailByRootName>`_:
+
+.. code:: sh
+
+    sudo chfn -f "$HOSTNAME root" root
+
+In your passwd, you can set a "full name" for each user.
+Most people leave these field empty.
+However, most of those tools sending email will use it.
+We can exploit that to add some more information.
+For example, the hostname,
+because if cron sends you an email,
+that information will not be in there.
+If you only have one server,
+that trick in not necessary,
+but maybe you find something else to put in there.
+
 Instant Message
 ---------------
 
