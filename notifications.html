@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Notifications &#8212; My Homeserver</title>
+    
+    <link rel="stylesheet" href="_static/marcelene.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dynamic DNS" href="dyndns.html" />
+    <link rel="prev" title="Hardening" href="hardening.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">My Homeserver</a></div>
+        <div class="rel">
+          <a href="hardening.html" title="Hardening"
+             accesskey="P">previous</a> |
+          <a href="dyndns.html" title="Dynamic DNS"
+             accesskey="N">next</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="notifications">
+<h1>Notifications<a class="headerlink" href="#notifications" title="Permalink to this headline">¶</a></h1>
+<p>Sometimes things go wrong.
+Hardware fail.
+Updates fail.
+Space runs out.</p>
+<p>In such cases,
+the server must be able to contact you, the admin.</p>
+<div class="section" id="e-mail">
+<h2>E-Mail<a class="headerlink" href="#e-mail" title="Permalink to this headline">¶</a></h2>
+<p>The usual way is to send emails.
+To avoid a full mail server, there is a simple forward tool.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">apt</span> <span class="n">install</span> <span class="n">postfix</span> <span class="n">mailutils</span>
+</pre></div>
+</div>
+<p>During the installation of postfix,
+dpkg will ask a few questions.
+My answwers were:</p>
+<ul class="simple">
+<li>Install a satellite system</li>
+<li>For mailname my <a class="reference external" href="dyndns">dynamic selfhost domain</a></li>
+<li>As SMTP relay host, my mail provider <code class="docutils literal"><span class="pre">smtp.web.de</span></code></li>
+</ul>
+<p>Now more questions via <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">dpkg-reconfigure</span> <span class="pre">postfix</span></code>.</p>
+<p>Now, we must configure it by editing <code class="docutils literal"><span class="pre">/etc/ssmtp/ssmtp.conf</span></code>.</p>
+<ul class="simple">
+<li>After repeating the first three questions above, there is more.</li>
+<li>My email address, which will receive mail for root etc.</li>
+<li>Destinations to accept mail.
+Removed a few of the proposed ones.</li>
+<li>Force synchronous updates.</li>
+<li>As per default,
+only accept from localhost.</li>
+<li>Use the upstream default of 51200000 bytes.</li>
+<li>Default for local address extension character.</li>
+<li>Use IPv4 and IPv6.</li>
+</ul>
+<p>This is still not enough configuration.
+Add the following lines to <code class="docutils literal"><span class="pre">/etc/postfix/main.cf</span></code>.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">smtp_sasl_auth_enable</span> <span class="o">=</span> <span class="n">yes</span>
+<span class="n">smtp_sasl_security_options</span> <span class="o">=</span> <span class="n">noanonymous</span>
+<span class="n">smtp_sasl_password_maps</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">postfix</span><span class="o">/</span><span class="n">sasl_password</span>
+<span class="n">sender_canonical_maps</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">postfix</span><span class="o">/</span><span class="n">sender_canonical</span>
+<span class="n">smtp_tls_security_level</span> <span class="o">=</span> <span class="n">encrypt</span>
+<span class="n">smtpd_enforce_tls</span> <span class="o">=</span> <span class="n">yes</span>
+</pre></div>
+</div>
+<p>The account information for sending emails
+is put into <code class="docutils literal"><span class="pre">/etc/postfix/sasl_password</span></code>
+in the following format.
+Also, set its mode to <code class="docutils literal"><span class="pre">0600</span></code>,
+so it is not readable by everybody on the machine.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">smtp</span><span class="o">.</span><span class="n">web</span><span class="o">.</span><span class="n">de</span> <span class="n">qznc</span><span class="nd">@web</span><span class="o">.</span><span class="n">de</span><span class="p">:</span><span class="n">password</span>
+</pre></div>
+</div>
+<p>In <code class="docutils literal"><span class="pre">/etc/postfix/sender_canonical</span></code>,
+write a list of all mappings for local users.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="n">someone</span><span class="o">+</span><span class="n">root</span><span class="nd">@gmail</span><span class="o">.</span><span class="n">com</span>
+<span class="n">qznc</span> <span class="n">someone</span><span class="o">+</span><span class="n">qznc</span><span class="nd">@gmail</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<p>These are for adapting the sender addresses.
+Now for changing the recipient addresses,
+edit <code class="docutils literal"><span class="pre">/etc/aliases</span></code>.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">postmaster</span><span class="p">:</span>    <span class="n">root</span>
+<span class="n">root</span><span class="p">:</span>          <span class="n">someone</span><span class="o">+</span><span class="n">root</span><span class="nd">@gmail</span><span class="o">.</span><span class="n">com</span>
+<span class="n">qznc</span><span class="p">:</span>          <span class="n">someone</span><span class="o">+</span><span class="n">qznc</span><span class="nd">@gmail</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<p>Postfix requires some hashing and a restart now.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">postmap</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">postfix</span><span class="o">/</span><span class="n">sasl_password</span>
+<span class="n">sudo</span> <span class="n">postmap</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">postfix</span><span class="o">/</span><span class="n">sender_canonical</span>
+<span class="n">sudo</span> <span class="n">newaliases</span>
+<span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">postfix</span>
+</pre></div>
+</div>
+<p>Now cron and others should be able to send email.
+You can try it manually.
+Explicitly try a different FROM address via <code class="docutils literal"><span class="pre">-r</span></code>
+to check if ssmtp correctly rewrites it.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s2">&quot;$HOSTNAME Email Ready&quot;</span> <span class="o">|</span> <span class="n">mail</span> <span class="o">-</span><span class="n">s</span> <span class="s1">&#39;Email test&#39;</span> <span class="o">-</span><span class="n">r</span> <span class="s1">&#39;bill@microsft.com&#39;</span> <span class="n">root</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The <code class="docutils literal"><span class="pre">+homeserver</span></code> tagging in gmail seems not to work?</p>
+</div>
+<p>Now a nice trick to improve the emails a little
+<a class="reference external" href="https://utcc.utoronto.ca/~cks/space/blog/sysadmin/IdentifyMachineEmailByRootName">from Chris Siebenmann</a>:</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chfn</span> <span class="o">-</span><span class="n">f</span> <span class="s2">&quot;$HOSTNAME root&quot;</span> <span class="n">root</span>
+</pre></div>
+</div>
+<p>In your passwd, you can set a “full name” for each user.
+Most people leave these field empty.
+However, most of those tools sending email will use it.
+We can exploit that to add some more information.
+For example, the hostname,
+because if cron sends you an email,
+that information will not be in there.
+If you only have one server,
+that trick in not necessary,
+but maybe you find something else to put in there.</p>
+</div>
+<div class="section" id="instant-message">
+<h2>Instant Message<a class="headerlink" href="#instant-message" title="Permalink to this headline">¶</a></h2>
+<p>A more modern way is use some instant messenger.</p>
+<p>Usually, I recommend <a class="reference external" href="https://whispersystems.org/">Signal</a>,
+but they do not like bots.
+Likewise, WhatsApp, which is really popular.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Matrix looks good. Working on using that…</p>
+</div>
+</div>
+<div class="section" id="supervising">
+<h2>Supervising<a class="headerlink" href="#supervising" title="Permalink to this headline">¶</a></h2>
+<p>Nagios and Munin?</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="os.html">Operating System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardening.html">Hardening</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Notifications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#e-mail">E-Mail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instant-message">Instant Message</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supervising">Supervising</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dyndns.html">Dynamic DNS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nextcloud.html">NextCloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cronjobs.html">Cron Jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convenience.html">Convenience</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fineprint.html">Fineprint</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="hardening.html" title="Hardening"
+             >previous</a> |
+          <a href="dyndns.html" title="Dynamic DNS"
+             >next</a>
+            <br/>
+            <a href="_sources/notifications.rst.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Andreas Zwinkau.
+      Last updated on 2017-05-22.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.
+    </div>
+        </div>
+        <div class="clearer"></div>
+        <div id="feedback">
+          For feedback <a href="mailto:qznc@web.de">write me an email to qznc@web.de</a>.
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>

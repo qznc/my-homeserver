@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hardening &#8212; My Homeserver</title>
+    
+    <link rel="stylesheet" href="_static/marcelene.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Notifications" href="notifications.html" />
+    <link rel="prev" title="Operating System" href="os.html" /> 
+  </head>
+  <body>
+    <div class="header-wrapper">
+      <div class="header">
+        <div class="headertitle"><a
+          href="index.html">My Homeserver</a></div>
+        <div class="rel">
+          <a href="os.html" title="Operating System"
+             accesskey="P">previous</a> |
+          <a href="notifications.html" title="Notifications"
+             accesskey="N">next</a>
+        </div>
+       </div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="content">
+        <div class="document">
+            
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hardening">
+<h1>Hardening<a class="headerlink" href="#hardening" title="Permalink to this headline">¶</a></h1>
+<p>We really do not want arbitrary people hacking into our server.
+Since we also do not want to spend time on maintaining it,
+we need a very conservative security configuration.
+This might complicate other things,
+but the peace of mind is worth it.</p>
+<div class="section" id="automatic-security-updates">
+<h2>Automatic Security Updates<a class="headerlink" href="#automatic-security-updates" title="Permalink to this headline">¶</a></h2>
+<p>Keeping a system up to date is one of the most important security aspects.
+We want the system to install updates automatically.
+Not only security updates.
+All updates.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">unattended</span><span class="o">-</span><span class="n">upgrades</span> <span class="n">update</span><span class="o">-</span><span class="n">notifier</span><span class="o">-</span><span class="n">common</span>
+</pre></div>
+</div>
+<p>The update-notifier package is only needed for the automatic reboots.</p>
+<p>Edit <code class="docutils literal"><span class="pre">/etc/apt/apt.conf.d/50unattended-upgrades</span></code> to look like this:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">Unattended</span><span class="o">-</span><span class="n">Upgrade</span><span class="p">::</span><span class="n">Allowed</span><span class="o">-</span><span class="n">Origins</span> <span class="p">{</span>
+   <span class="s2">&quot;$</span><span class="si">{distro_id}</span><span class="s2"> stable&quot;</span><span class="p">;</span>
+   <span class="s2">&quot;$</span><span class="si">{distro_id}</span><span class="s2"> $</span><span class="si">{distro_codename}</span><span class="s2">-security&quot;</span><span class="p">;</span>
+   <span class="s2">&quot;$</span><span class="si">{distro_id}</span><span class="s2"> $</span><span class="si">{distro_codename}</span><span class="s2">-updates&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="n">Unattended</span><span class="o">-</span><span class="n">Upgrade</span><span class="p">::</span><span class="n">Remove</span><span class="o">-</span><span class="n">Unused</span><span class="o">-</span><span class="n">Dependencies</span> <span class="s2">&quot;true&quot;</span><span class="p">;</span>
+<span class="n">Unattended</span><span class="o">-</span><span class="n">Upgrade</span><span class="p">::</span><span class="n">Automatic</span><span class="o">-</span><span class="n">Reboot</span> <span class="s2">&quot;true&quot;</span><span class="p">;</span>
+<span class="n">Unattended</span><span class="o">-</span><span class="n">Upgrade</span><span class="p">::</span><span class="n">Automatic</span><span class="o">-</span><span class="n">Reboot</span><span class="o">-</span><span class="n">Time</span> <span class="s2">&quot;04:00&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Additionally, <code class="docutils literal"><span class="pre">/etc/apt/apt.conf.d/10periodic</span></code>:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">APT</span><span class="p">::</span><span class="n">Periodic</span><span class="p">::</span><span class="n">Update</span><span class="o">-</span><span class="n">Package</span><span class="o">-</span><span class="n">Lists</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+<span class="n">APT</span><span class="p">::</span><span class="n">Periodic</span><span class="p">::</span><span class="n">Download</span><span class="o">-</span><span class="n">Upgradeable</span><span class="o">-</span><span class="n">Packages</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+<span class="n">APT</span><span class="p">::</span><span class="n">Periodic</span><span class="p">::</span><span class="n">AutocleanInterval</span> <span class="s2">&quot;7&quot;</span><span class="p">;</span>
+<span class="n">APT</span><span class="p">::</span><span class="n">Periodic</span><span class="p">::</span><span class="n">Unattended</span><span class="o">-</span><span class="n">Upgrade</span> <span class="s2">&quot;1&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="apparmor">
+<h2>AppArmor<a class="headerlink" href="#apparmor" title="Permalink to this headline">¶</a></h2>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">apparmor</span><span class="o">-</span><span class="n">utils</span>
+</pre></div>
+</div>
+<p>Check, if it is enabled.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apparmor_status</span>
+</pre></div>
+</div>
+<p>If you want to <a class="reference external" href="https://www.howtogeek.com/118328/how-to-create-apparmor-profiles-to-lock-down-programs-on-ubuntu/">write your own AppArmor profiles</a>,
+the trick is to use <code class="docutils literal"><span class="pre">aa-genprof</span></code>.
+It semi-automatically generates a profile from logging activity.</p>
+</div>
+<div class="section" id="firewall">
+<h2>Firewall<a class="headerlink" href="#firewall" title="Permalink to this headline">¶</a></h2>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">ufw</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Not active in practice yet</p>
+</div>
+</div>
+<div class="section" id="ssh-configuration">
+<h2>SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permalink to this headline">¶</a></h2>
+<p>First, <em>make sure you have public-key authentication</em>,
+because now we disable password authentication.
+To copy your public key from your desktop/laptop,
+use:</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="nb">id</span> <span class="n">username</span><span class="nd">@remotehost</span>
+</pre></div>
+</div>
+<p>Now we can edit <code class="docutils literal"><span class="pre">/etc/ssh/sshd_config</span></code>:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">PasswordAuthentication</span> <span class="n">no</span>
+<span class="n">AuthorizedKeysFile</span>     <span class="o">%</span><span class="n">h</span><span class="o">/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">Protocol</span> <span class="mi">2</span>
+<span class="n">PermitRootLogin</span> <span class="n">no</span>
+<span class="n">AllowUsers</span> <span class="n">qznc</span>
+</pre></div>
+</div>
+<p>Also,
+rate limiting via firewall.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ufw</span> <span class="n">limit</span> <span class="n">OpenSSH</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fail2ban">
+<h2>Fail2ban<a class="headerlink" href="#fail2ban" title="Permalink to this headline">¶</a></h2>
+<p>Just install it.
+Out of the box, it is configured ok.</p>
+<div class="code sh highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">fail2ban</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="secure-shared-memory">
+<h2>Secure Shared Memory<a class="headerlink" href="#secure-shared-memory" title="Permalink to this headline">¶</a></h2>
+<p>The following line in ‘/etc/fstab’:</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">tmpfs</span> <span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">shm</span> <span class="n">tmpfs</span> <span class="n">defaults</span><span class="p">,</span><span class="n">noexec</span><span class="p">,</span><span class="n">nosuid</span> <span class="mi">0</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prevent-ip-spoofing">
+<h2>Prevent IP Spoofing<a class="headerlink" href="#prevent-ip-spoofing" title="Permalink to this headline">¶</a></h2>
+<p>I need to edit ‘/etc/host.conf’, but why?</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">order</span> <span class="n">bind</span><span class="p">,</span><span class="n">hosts</span>
+<span class="n">nospoof</span> <span class="n">on</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">I do not understand this yet.
+Why and how does it work?</p>
+</div>
+</div>
+<div class="section" id="etckeeper">
+<h2>EtcKeeper<a class="headerlink" href="#etckeeper" title="Permalink to this headline">¶</a></h2>
+<p>Keeping <code class="docutils literal"><span class="pre">/etc</span></code> in version control can be convenient.
+It is presented in this hardening chapter,
+because looking at history can be interesting in terms of security.</p>
+<p>Install and initialize it.
+It will autocommit daily and in sync with apt.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">etckeeper</span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">etc</span>
+<span class="n">sudo</span> <span class="n">etckeeper</span> <span class="n">init</span>
+<span class="n">sudo</span> <span class="n">etckeeper</span> <span class="n">commit</span> <span class="s2">&quot;initial&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lynis">
+<h2>Lynis<a class="headerlink" href="#lynis" title="Permalink to this headline">¶</a></h2>
+<p>For more hardening tips, install lynis and let it run.</p>
+<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">lynis</span>
+<span class="n">sudo</span> <span class="n">lynis</span> <span class="n">system</span> <span class="n">audit</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="https://help.ubuntu.com/community/StricterDefaults">Ubuntu documentation on stricter defaults</a>,
+<a class="reference external" href="https://plusbryan.com/my-first-5-minutes-on-a-server-or-essential-security-for-linux-servers">My First 5 Minutes On A Server; Or, Essential Security for Linux Servers</a>,
+<a class="reference external" href="https://help.ubuntu.com/lts/serverguide/">Ubuntu Server Guide</a></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+        </div>
+        <div class="sidebar">
+          <h3>Table Of Contents</h3>
+          <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="os.html">Operating System</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hardening</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-security-updates">Automatic Security Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#apparmor">AppArmor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#firewall">Firewall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ssh-configuration">SSH Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fail2ban">Fail2ban</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#secure-shared-memory">Secure Shared Memory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prevent-ip-spoofing">Prevent IP Spoofing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#etckeeper">EtcKeeper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lynis">Lynis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notifications.html">Notifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dyndns.html">Dynamic DNS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nextcloud.html">NextCloud</a></li>
+<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cronjobs.html">Cron Jobs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convenience.html">Convenience</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fineprint.html">Fineprint</a></li>
+</ul>
+
+          <h3 style="margin-top: 1.5em;">Search</h3>
+          <form class="search" action="search.html" method="get">
+            <input type="text" name="q" />
+            <input type="submit" value="Go" />
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+          </form>
+          <p class="searchtip" style="font-size: 90%">
+            Enter search terms or a module, class or function name.
+          </p>
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="footer">
+        <div class="left">
+          <a href="os.html" title="Operating System"
+             >previous</a> |
+          <a href="notifications.html" title="Notifications"
+             >next</a>
+            <br/>
+            <a href="_sources/hardening.rst.txt"
+               rel="nofollow">Show Source</a>
+        </div>
+
+        <div class="right">
+          
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Andreas Zwinkau.
+      Last updated on 2017-05-22.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.1.
+    </div>
+        </div>
+        <div class="clearer"></div>
+        <div id="feedback">
+          For feedback <a href="mailto:qznc@web.de">write me an email to qznc@web.de</a>.
+        </div>
+        <div class="clearer"></div>
+      </div>
+    </div>
+
+  </body>
+</html>
