@@ -162,6 +162,16 @@ It will autocommit daily and in sync with apt.
    sudo etckeeper init
    sudo etckeeper commit "initial"
 
+Lynis
+-----
+
+For more hardening tips, install lynis and let it run.
+
+.. code::
+
+   sudo apt install lynis
+   sudo lynis system audit
+
 AIDE
 ----
 
