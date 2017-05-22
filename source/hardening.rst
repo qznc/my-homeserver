@@ -110,17 +110,6 @@ Out of the box, it is configured ok.
 
    sudo apt install fail2ban
 
-Checking for Root Kits
-----------------------
-
-.. code:: sh
-
-   sudo apt install rkhunter chkrootkit
-
-.. warning::
-
-   Not active in practice yet
-
 Secure Shared Memory
 --------------------
 
@@ -171,25 +160,6 @@ For more hardening tips, install lynis and let it run.
 
    sudo apt install lynis
    sudo lynis system audit
-
-AIDE
-----
-
-The `Advanced Intrusion Detection Environment <http://aide.sourceforge.net>`_ tool
-looks at the system and sends a mail, when anything suspicious changes.
-
-.. code::
-
-   sudo apt install aide
-   sudo aideinit -y -f
-
-AIDE scans the whole system,
-so it takes a while.
-
-.. warning::
-
-   Not yet working.
-   My laptop might be too slow?
 
 .. seealso::
 
